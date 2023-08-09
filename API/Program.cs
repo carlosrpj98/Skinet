@@ -29,4 +29,21 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//Creating scope to apply migrations to the database when starting the app
+//the scope will be disposed (IDisposable) after done, because of "using" statement
+//this block of code allow injecting services in the program.cs 
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var context = services.GetRequiredService<StoreContext>();
+var logger = services.GetRequiredService<ILogger<Program>>();
+try
+{
+    await context.Database.MigrateAsync();
+    await StoreContextSeed.SeedAsync(context);
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "An error occured during migration");
+}
+
 app.Run();
