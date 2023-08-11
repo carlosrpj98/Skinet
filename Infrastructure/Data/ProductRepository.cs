@@ -8,10 +8,10 @@ namespace Infrastructure.Data
     {
         private readonly StoreContext _context;
 
+
         public ProductRepository(StoreContext context)
         {
             _context = context;
-
         }
 
         public async Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync()
